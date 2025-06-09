@@ -116,9 +116,9 @@ plt.plot(data[data['Signal'] == 1].index,
          data['SMA10'][data['Signal'] ==1],
          '^', markersize = 10, color = 'g', label ='Buy Signal')
 
-plt.plot(data[data['Signal'] ==1].index,
-         data['SMA10'][data['Signal'] ==1],
-         '^', markersize = 10, color = 'g', label = 'Sell Signal')
+plt.plot(data[data['Signal'] == -1].index,
+         data['SMA10'][data['Signal'] == -1],
+         '^', markersize = 10, color = 'r', label = 'Sell Signal')
 plt.title(f'{ticker_symbol} Price, SMAs, and Crossover Signals')
 plt.ylabel('Price')
 plt.legend()
