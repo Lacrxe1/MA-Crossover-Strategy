@@ -70,6 +70,31 @@ if benchmark_std_dev != 0:
 else:
     benchmark_sharpe_ratio = 0
 
+# --- Simple Win Rate Calculation ---
+print("\nCalculating Win Rate...")
+
+# Find all buy and sell signals
+buy_signals = data[data['Signal'] == 1]['Close'].values
+sell_signals = data[data['Signal'] == -1]['Close'].values
+
+# Match buys with sells (assuming they alternate properly)
+num_trades = min(len(buy_signals), len(sell_signals))
+
+if num_trades > 0:
+    # Calculate returns for each trade
+    returns = (sell_signals[:num_trades] - buy_signals[:num_trades]) / buy_signals[:num_trades]
+
+    # Count winning trades
+    winning_trades = (returns > 0).sum()
+
+    # Calculate win rate
+    win_rate = (winning_trades / num_trades) * 100
+
+else:
+    win_rate = 0
+    print("No trades found.")
+
+
 # Number of trades
 
 initial_capital = 2000
@@ -87,8 +112,10 @@ print(f"Starting Capital: ${initial_capital:,.2f}")
 print(f"Final Value: ${strategy_final_value:,.2f}")
 print(f"Profit: ${strategy_final_value - initial_capital:,.2f}")
 print(f"Cumulative Return: {(data['Cumulative_Strategy'].iloc[-1] - 1):.2%}")
-print(f"Annualized Sharpe Ratio: {strategy_sharpe_ratio:.2f}")  # This was already here
-print(f"Max Drawdown: {max_drawdown:.2%}")  # This was already here
+print(f"Annualized Sharpe Ratio: {strategy_sharpe_ratio:.2f}") 
+print(f"Max Drawdown: {max_drawdown:.2%}")
+print(f"Winning trades: {winning_trades}")
+print(f"Win Rate: {win_rate:.2f}%")
 
 # Benchmark Performance
 print("\n--- BUY & HOLD (BENCHMARK) PERFORMANCE ---")
@@ -97,9 +124,9 @@ print(f"Starting Capital: ${initial_capital:,.2f}")
 print(f"Final Value: ${benchmark_final_value:,.2f}")
 print(f"Profit: ${benchmark_final_value - initial_capital:,.2f}")
 print(f"Cumulative Return: {(data['Cumulative_Returns'].iloc[-1] - 1):.2%}")
-print(f"Annualized Sharpe Ratio: {benchmark_sharpe_ratio:.2f}")  # This was already here
+print(f"Annualized Sharpe Ratio: {benchmark_sharpe_ratio:.2f}") 
 
-print(f"\nTotal Trades Executed: {num_trades}")  # This was already here
+print(f"\nTotal Trades Executed: {num_trades}")
 print("-" * 50)
 
 # Section 6, Plots and Visualization
